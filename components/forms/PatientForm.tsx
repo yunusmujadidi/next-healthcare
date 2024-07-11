@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import CustomFormField, { FormFieldType } from "./CustomFormField";
+import SubmitButton from "../SubmitButton";
+import { useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -23,6 +25,8 @@ const formSchema = z.object({
 });
 
 export function PatientForm() {
+  const [isLoading, setIsLoading] = useState(false);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,7 +75,7 @@ export function PatientForm() {
           fieldType={FormFieldType.PHONE_INPUT}
         />
 
-        <Button type="submit">Submit</Button>
+        <SubmitButton>Get Started</SubmitButton>
       </form>
     </Form>
   );
