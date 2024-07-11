@@ -12,6 +12,7 @@ import { Control } from "react-hook-form";
 import Image from "next/image";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+import { E164Number } from "libphonenumber-js";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -77,7 +78,7 @@ const RenderField = ({
             placeholder={placeholder}
             international
             withCountryCallingCode
-            value={field.value}
+            value={field.value as E164Number | undefined}
             onChange={field.onChange}
             className="input-phone"
           />
