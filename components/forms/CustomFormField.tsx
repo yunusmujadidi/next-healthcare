@@ -10,6 +10,8 @@ import {
 import { Input } from "../ui/input";
 import { Control } from "react-hook-form";
 import Image from "next/image";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -66,6 +68,20 @@ const RenderField = ({
             />
           </FormControl>
         </div>
+      );
+    case FormFieldType.PHONE_INPUT:
+      return (
+        <FormControl>
+          <PhoneInput
+            defaultCountry="ID"
+            placeholder={placeholder}
+            international
+            withCountryCallingCode
+            value={field.value}
+            onChange={field.onChange}
+            className="input-phone"
+          />
+        </FormControl>
       );
     default:
       break;

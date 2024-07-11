@@ -63,6 +63,13 @@ export function PatientForm() {
           iconAlt="email"
           fieldType={FormFieldType.INPUT}
         />
+        <CustomFormField
+          control={form.control}
+          name="phone"
+          label="Phone number"
+          placeholder="(+62) 812-3456-7890"
+          fieldType={FormFieldType.PHONE_INPUT}
+        />
 
         <Button type="submit">Submit</Button>
       </form>
