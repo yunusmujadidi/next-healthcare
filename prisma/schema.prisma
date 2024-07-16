@@ -23,9 +23,10 @@ model User {
   name          String?
   email         String          @unique
   emailVerified DateTime?
+  phone         String?
   image         String?
+  password      String?
   accounts      Account[]
-  sessions      Session[]
   role          Role            @default(PATIENT)
   // Optional for WebAuthn support
   Authenticator Authenticator[]
@@ -53,24 +54,6 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
-}
-
-model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
-
-  @@id([identifier, token])
 }
 
 // Optional for WebAuthn support

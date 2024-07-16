@@ -9,6 +9,7 @@ import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/actions/patient.actions";
 
 export function PatientForm() {
   const router = useRouter();
@@ -29,17 +30,26 @@ export function PatientForm() {
     setIsLoading(true);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-
     try {
-      // const userData = { name, email, phone };
-      // const user = await createUser(userData);
-      // if (user) {
-      //   router.push(`/patients/${user.id}/register`);
-      // }
+      const userData = { ...values };
+      const response = await createUser(userData);
+
+      if ("error" in response) {
+        // Handle the error case
+        console.error(response.error);
+        // You might want to show an error message to the user here
+      } else if ("id" in response) {
+        // Successfully created user
+        router.push(`/patients/${response.id}/register`);
+      } else {
+        // Handle unexpected response
+        console.error("Unexpected response from createUser:", response);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error in onSubmit:", error);
+    } finally {
+      setIsLoading(false);
     }
-    console.log(values);
   }
 
   return (
