@@ -85,7 +85,7 @@ export function PatientForm() {
           fieldType={FormFieldType.PHONE_INPUT}
         />
 
-        <SubmitButton>Get Started</SubmitButton>
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   );

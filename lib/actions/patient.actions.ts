@@ -1,11 +1,12 @@
 "use server";
+import { User } from "@prisma/client";
 import prisma from "../db";
 import { parseStringify } from "../utils";
 
 export const createUser = async (user: any) => {
   try {
     console.log("Checking if user exists with email:", user.email);
-    const userExists = await prisma.user.findUnique({
+    const userExists = await prisma.user.findMany({
       where: {
         email: user.email,
       },
@@ -31,4 +32,13 @@ export const createUser = async (user: any) => {
       error: "An error occurred while creating the user",
     };
   }
+};
+
+export const getUser = async (userId: string) => {
+  const user = await prisma.user.findMany({
+    where: {
+      id: userId,
+    },
+  });
+  return parseStringify(user);
 };
