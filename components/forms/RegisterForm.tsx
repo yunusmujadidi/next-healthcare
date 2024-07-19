@@ -16,7 +16,7 @@ import { Label } from "../ui/label";
 import { Doctors, IdentificationTypes } from "@/lib/const";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
-import FileUploader from "./FileUploader";
+import { FileUploader } from "./FileUploader";
 
 const GenderOptions = ["Male", "Female"];
 
@@ -109,7 +109,7 @@ export function RegisterForm(user: any) {
             name="gender"
             label="Gender"
             fieldType={FormFieldType.SKELETON}
-            renderSkeleton={(field) => (
+            renderSkeleton={() => (
               <FormControl>
                 <RadioGroup className="flex h-11 gap-6 xl:justify-between">
                   {GenderOptions.map((option) => (
@@ -273,7 +273,11 @@ export function RegisterForm(user: any) {
           name="identificationDocument"
           label="Upload Identification Document"
           fieldType={FormFieldType.SKELETON}
-          renderSkeleton={(field) => <FormControl>File Uploader</FormControl>}
+          renderSkeleton={(field) => (
+            <FormControl>
+              <FileUploader files={field.value} onChange={field.onChange} />
+            </FormControl>
+          )}
         />
 
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
