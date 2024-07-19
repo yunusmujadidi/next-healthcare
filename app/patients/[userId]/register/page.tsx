@@ -8,8 +8,8 @@ const Register = ({ params: { userId } }: { params: { userId: string } }) => {
   const user = getUser(userId);
   return (
     <div className="flex h-screen max-h-screen">
-      <section className="remove-scrollbar container my-auto">
-        <div className="sub-container max-w-[496px]">
+      <section className="remove-scrollbar container ">
+        <div className="sub-container max-w-[866px] flex-1 flex-col py-10">
           <Image
             src="/assets/icons/logo-full.svg"
             width={1000}
@@ -18,11 +18,8 @@ const Register = ({ params: { userId } }: { params: { userId: string } }) => {
             className="mb-10 h-10 w-fit"
           />
           <RegisterForm user={user} />
-          <div className="text-sm font-normal mt-20 flex justify-between">
+          <div className="copyright py-4">
             <p>Copyright 2024 CarePlus</p>
-            <Link href="/?admin=true" className="text-green-500">
-              Admin
-            </Link>
           </div>
         </div>
       </section>
@@ -31,7 +28,7 @@ const Register = ({ params: { userId } }: { params: { userId: string } }) => {
         width={1000}
         height={1000}
         alt="patient "
-        className="hidden h-full object-cover md:block max-w-[50%]"
+        className="hidden h-full object-cover md:block max-w-[390px]"
       />
     </div>
   );

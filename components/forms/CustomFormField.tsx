@@ -19,6 +19,8 @@ import DatePicker from "react-datepicker";
 import { Select, SelectTrigger, SelectValue } from "../ui/select";
 import { SelectContent } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 export enum FormFieldType {
   INPUT = "input",
   TEXTAREA = "textarea",
@@ -136,6 +138,21 @@ const RenderField = ({
             className="shad-textArea"
             disabled={props.disabled}
           />
+        </FormControl>
+      );
+    case FormFieldType.CHECKBOX:
+      return (
+        <FormControl>
+          <div className="flex items-center gap-4">
+            <Checkbox
+              id={props.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+            <Label htmlFor={props.name} className="checkbox-label">
+              {props.label}
+            </Label>
+          </div>
         </FormControl>
       );
     default:
