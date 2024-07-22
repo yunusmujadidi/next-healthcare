@@ -17,7 +17,7 @@ import Image from "next/image";
 import { FileUploader } from "./FileUploader";
 import { registerPatient } from "@/lib/actions/patient.actions";
 
-const GenderOptions = ["Male", "Female"];
+const GenderOptions = ["MALE", "FEMALE"];
 
 export function RegisterForm(user: any) {
   const router = useRouter();
@@ -31,7 +31,7 @@ export function RegisterForm(user: any) {
       email: "",
       phone: "",
       birthDate: new Date(Date.now()),
-      gender: "Male",
+      gender: "MALE",
       address: "",
       occupation: "",
       emergencyContactName: "",
@@ -45,7 +45,7 @@ export function RegisterForm(user: any) {
       pastMedicalHistory: "",
       identificationType: "Birth Certificate",
       identificationNumber: "",
-      identificationDocument: [],
+      identificationDocument: "",
       treatmentConsent: false,
       disclosureConsent: false,
       privacyConsent: false,
@@ -58,31 +58,18 @@ export function RegisterForm(user: any) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
 
-    let formData;
-    // Create a new FormData object and append the identificationDocument blob file to it.
-    if (
-      values.identificationDocument &&
-      values.identificationDocument.length > 0
-    ) {
-      const blobFile = new Blob([values.identificationDocument[0]], {
-        type: values.identificationDocument[0].type,
-      });
-      formData = new FormData();
-      formData.append("blobFile", blobFile);
-      formData.append("fileName", values.identificationDocument[0].name);
-    }
-
     try {
       const patientData = {
         ...values,
         userId: user.$id,
         birthDate: new Date(values.birthDate),
-        identificationDocument: formData,
+        identificationDocument: values.identificationDocument || null,
       };
+      console.log(patientData);
       const response = await registerPatient(patientData);
 
       if (response) {
-        router.push(`/patients/${user.$id}/new-appointment`);
+        console.log(response);
       }
     } catch (error) {
       console.error("Error in onSubmit:", error);
@@ -249,8 +236,8 @@ export function RegisterForm(user: any) {
           />
           <CustomFormField
             control={form.control}
-            name="currentMedications"
-            label="Current Medications"
+            name="currentMedication"
+            label="Current Medication"
             placeholder="Paracetamol, etc."
             fieldType={FormFieldType.TEXTAREA}
           />
@@ -305,7 +292,7 @@ export function RegisterForm(user: any) {
           fieldType={FormFieldType.SKELETON}
           renderSkeleton={(field) => (
             <FormControl>
-              <FileUploader files={field.value} onChange={field.onChange} />
+              <FileUploader value={field.value} onChange={field.onChange} />
             </FormControl>
           )}
         />
@@ -332,7 +319,8 @@ export function RegisterForm(user: any) {
           label="I consent to privacy policy and terms of service"
           fieldType={FormFieldType.CHECKBOX}
         />
-        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+
+        <SubmitButton isLoading={isLoading}>Submit</SubmitButton>
       </form>
     </Form>
   );

@@ -1,22 +1,9 @@
 "use server";
-import { Patient, User } from "@prisma/client";
 import prisma from "../db";
 import { parseStringify } from "../utils";
 
 export const createUser = async (user: any) => {
   try {
-    console.log("Checking if user exists with email:", user.email);
-    const userExists = await prisma.user.findMany({
-      where: {
-        email: user.email,
-      },
-    });
-
-    if (userExists) {
-      console.log("User already exists:", userExists);
-      return parseStringify(userExists);
-    }
-
     console.log("Creating new user with data:", user);
     const newUser = await prisma.user.create({
       data: {
@@ -43,9 +30,44 @@ export const getUser = async (userId: string) => {
   return parseStringify(user);
 };
 
-export const registerPatient = async () => {
+export const registerPatient = async (patientData: any) => {
   try {
+    console.log("Registering new patient with data:", patientData);
+
+    // Create the patient record
+    const newPatient = await prisma.patient.create({
+      data: {
+        name: patientData.name,
+        email: patientData.email,
+        phone: patientData.phone,
+        birthDate: patientData.birthDate,
+        gender: patientData.gender,
+        address: patientData.address,
+        occupation: patientData.occupation,
+        emergencyContactName: patientData.emergencyContactName,
+        emergencyContactNumber: patientData.emergencyContactNumber,
+        primaryPhysician: patientData.primaryPhysician,
+        insuranceProvider: patientData.insuranceProvider,
+        insurancePolicyNumber: patientData.insurancePolicyNumber,
+        allergies: patientData.allergies,
+        currentMedication: patientData.currentMedication,
+        familyMedicalHistory: patientData.familyMedicalHistory,
+        pastMedicalHistory: patientData.pastMedicalHistory,
+        identificationType: patientData.identificationType,
+        identificationNumber: patientData.identificationNumber,
+        identificationDocument: patientData.identificationDocument,
+        treatmentConsent: patientData.treatmentConsent,
+        disclosureConsent: patientData.disclosureConsent,
+        privacyConsent: patientData.privacyConsent,
+      },
+    });
+
+    console.log("New patient registered:", newPatient);
+    return parseStringify(newPatient);
   } catch (error) {
-    console.log(error);
+    console.error("Error in registerPatient:", error);
+    return {
+      error: "An error occurred while registering the patient",
+    };
   }
 };
