@@ -1,5 +1,5 @@
 "use server";
-import { User } from "@prisma/client";
+import { Patient, User } from "@prisma/client";
 import prisma from "../db";
 import { parseStringify } from "../utils";
 
@@ -41,4 +41,11 @@ export const getUser = async (userId: string) => {
     },
   });
   return parseStringify(user);
+};
+
+export const registerPatient = async () => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -7,16 +7,15 @@ import { Form, FormControl } from "@/components/ui/form";
 import CustomFormField, { FormFieldType } from "./CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
-import { UserFormValidation } from "@/lib/validation";
+import { PatientFormValidation, UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
-import { createUser } from "@/lib/actions/patient.actions";
-import { User } from "@prisma/client";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { Doctors, IdentificationTypes } from "@/lib/const";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
 import { FileUploader } from "./FileUploader";
+import { registerPatient } from "@/lib/actions/patient.actions";
 
 const GenderOptions = ["Male", "Female"];
 
@@ -25,34 +24,65 @@ export function RegisterForm(user: any) {
   const [isLoading, setIsLoading] = useState(false);
 
   // 1. Define your form.
-  const form = useForm<z.infer<typeof UserFormValidation>>({
-    resolver: zodResolver(UserFormValidation),
+  const form = useForm<z.infer<typeof PatientFormValidation>>({
+    resolver: zodResolver(PatientFormValidation),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
+      birthDate: new Date(Date.now()),
+      gender: "Male",
+      address: "",
+      occupation: "",
+      emergencyContactName: "",
+      emergencyContactNumber: "",
+      primaryPhysician: "",
+      insuranceProvider: "",
+      insurancePolicyNumber: "",
+      allergies: "",
+      currentMedication: "",
+      familyMedicalHistory: "",
+      pastMedicalHistory: "",
+      identificationType: "Birth Certificate",
+      identificationNumber: "",
+      identificationDocument: [],
+      treatmentConsent: false,
+      disclosureConsent: false,
+      privacyConsent: false,
     },
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof UserFormValidation>) {
+  async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    try {
-      const userData = { ...values };
-      const response = await createUser(userData);
 
-      if ("error" in response) {
-        // Handle the error case
-        console.error(response.error);
-        // You might want to show an error message to the user here
-      } else if ("id" in response) {
-        // Successfully created user
-        router.push(`/patients/${response.id}/register`);
-      } else {
-        // Handle unexpected response
-        console.error("Unexpected response from createUser:", response);
+    let formData;
+    // Create a new FormData object and append the identificationDocument blob file to it.
+    if (
+      values.identificationDocument &&
+      values.identificationDocument.length > 0
+    ) {
+      const blobFile = new Blob([values.identificationDocument[0]], {
+        type: values.identificationDocument[0].type,
+      });
+      formData = new FormData();
+      formData.append("blobFile", blobFile);
+      formData.append("fileName", values.identificationDocument[0].name);
+    }
+
+    try {
+      const patientData = {
+        ...values,
+        userId: user.$id,
+        birthDate: new Date(values.birthDate),
+        identificationDocument: formData,
+      };
+      const response = await registerPatient(patientData);
+
+      if (response) {
+        router.push(`/patients/${user.$id}/new-appointment`);
       }
     } catch (error) {
       console.error("Error in onSubmit:", error);
