@@ -173,6 +173,7 @@ const CustomFormField = (props: CustomFormFieldProps) => {
             <FormLabel>{label}</FormLabel>
           )}
           <RenderField field={field} props={props} />
+          <FormMessage className="text-red-400" />
         </FormItem>
       )}
     />

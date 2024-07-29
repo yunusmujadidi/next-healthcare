@@ -25,7 +25,7 @@ export default function Home() {
         </div>
       </section>
       <Image
-        src="/assets/images/onboarding-img.png"
+        src="/assets/images/onboarding-img.jpg"
         width={1000}
         height={1000}
         alt="patient "
